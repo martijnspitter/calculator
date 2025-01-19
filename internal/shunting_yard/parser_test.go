@@ -12,7 +12,7 @@ func TestParser_Parse(t *testing.T) {
 	tests := []struct {
 		name    string
 		fields  fields
-		want    string
+		want    []string
 		wantErr bool
 	}{
 		{
@@ -20,7 +20,7 @@ func TestParser_Parse(t *testing.T) {
 			fields: fields{
 				input: "1 + 2",
 			},
-			want:    "1 2 +",
+			want:    []string{"1", "2", "+"},
 			wantErr: false,
 		},
 		{
@@ -28,15 +28,19 @@ func TestParser_Parse(t *testing.T) {
 			fields: fields{
 				input: "1 + 2 * 3",
 			},
-			want:    "1 2 3 * +",
+			want:    []string{"1", "2", "3", "*", "+"},
 			wantErr: false,
 		},
 		{
 			name: "Test 3",
 			fields: fields{
 				input: "1 + 2 * 3 - 4",
+				// token *
+				// operator +
+
+				// [1 2 + 3 *]
 			},
-			want:    "1 2 3 * + 4 -",
+			want:    []string{"1", "2", "3", "*", "+", "4", "-"},
 			wantErr: false,
 		},
 		{
@@ -44,7 +48,15 @@ func TestParser_Parse(t *testing.T) {
 			fields: fields{
 				input: "(1 * 2) + (3 * 4)",
 			},
-			want:    "1 2 * 3 4 * +",
+			want:    []string{"1", "2", "*", "3", "4", "*", "+"},
+			wantErr: false,
+		},
+		{
+			name: "Test 5, handles floating point numbers",
+			fields: fields{
+				input: "1.1 + 2.2",
+			},
+			want:    []string{"1.1", "2.2", "+"},
 			wantErr: false,
 		},
 	}
@@ -57,8 +69,11 @@ func TestParser_Parse(t *testing.T) {
 				t.Errorf("Parser.Parse() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
-			if got != tt.want {
-				t.Errorf("Parser.Parse() = %v, want %v", got, tt.want)
+			for i, v := range got {
+				if v != tt.want[i] {
+					t.Errorf("Parser.Parse() = %v, want %v", got, tt.want)
+					t.FailNow()
+				}
 			}
 		})
 	}
