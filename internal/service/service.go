@@ -1,12 +1,13 @@
 package service
 
 import (
+	"calculator/internal/calculator"
 	"calculator/internal/cli"
-	"fmt"
+	"calculator/internal/shunting_yard"
 )
 
 type Service interface {
-	Execute() error
+	Execute() (float64, error)
 }
 
 type SortService struct {
@@ -19,13 +20,16 @@ func NewSortService(cli cli.Cli) Service {
 	}
 }
 
-func (s *SortService) Execute() error {
+func (s *SortService) Execute() (float64, error) {
 	config, err := s.cli.Execute()
-	fmt.Println(config)
+	parser := shuntingyard.NewParser(config.Input)
+	parsed := parser.Parse()
+	calc := calculator.NewCalculator(parsed)
+	result := calc.Calculate()
 
 	if err != nil {
-		return err
+		return 0, err
 	}
 
-	return nil
+	return result, nil
 }

@@ -64,11 +64,8 @@ func TestParser_Parse(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			p := shuntingyard.NewParser(tt.fields.input)
-			got, err := p.Parse()
-			if (err != nil) != tt.wantErr {
-				t.Errorf("Parser.Parse() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
+			got := p.Parse()
+
 			for i, v := range got {
 				if v != tt.want[i] {
 					t.Errorf("Parser.Parse() = %v, want %v", got, tt.want)

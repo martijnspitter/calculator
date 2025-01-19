@@ -4,15 +4,20 @@ import (
 	"calculator/internal/cli"
 	"calculator/internal/service"
 	"fmt"
+	"os"
 )
 
 func main() {
 	cli := cli.NewCmd()
 
 	service := service.NewSortService(cli)
-	err := service.Execute()
+	result, err := service.Execute()
 
 	if err != nil {
-		fmt.Println(err)
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
 	}
+
+	fmt.Fprintln(os.Stdout, result)
+	os.Exit(0)
 }

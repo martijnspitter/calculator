@@ -59,7 +59,7 @@ func isDigit(s string) bool {
 	return s[0] >= '0' && s[0] <= '9'
 }
 
-func (p *Parser) Parse() ([]string, error) {
+func (p *Parser) Parse() []string {
 	outputStack := []string{}
 	operatorStack := []string{}
 
@@ -105,7 +105,7 @@ func (p *Parser) Parse() ([]string, error) {
 		outputStack = append(outputStack, top)
 	}
 
-	return outputStack, nil
+	return outputStack
 }
 
 func isOperator(token string) bool {
