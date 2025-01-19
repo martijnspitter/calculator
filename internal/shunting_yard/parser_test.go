@@ -35,10 +35,6 @@ func TestParser_Parse(t *testing.T) {
 			name: "Test 3",
 			fields: fields{
 				input: "1 + 2 * 3 - 4",
-				// token *
-				// operator +
-
-				// [1 2 + 3 *]
 			},
 			want:    []string{"1", "2", "3", "*", "+", "4", "-"},
 			wantErr: false,

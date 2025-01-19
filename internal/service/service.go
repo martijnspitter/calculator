@@ -22,10 +22,14 @@ func NewSortService(cli cli.Cli) Service {
 
 func (s *SortService) Execute() (float64, error) {
 	config, err := s.cli.Execute()
+	if err != nil {
+		return 0, err
+	}
+
 	parser := shuntingyard.NewParser(config.Input)
 	parsed := parser.Parse()
 	calc := calculator.NewCalculator(parsed)
-	result := calc.Calculate()
+	result, err := calc.Calculate()
 
 	if err != nil {
 		return 0, err
